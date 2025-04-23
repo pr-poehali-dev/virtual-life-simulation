@@ -11,41 +11,77 @@ type CharacterProps = {
 };
 
 const Character = ({ stats }: CharacterProps) => {
+  const getProgressColor = (value: number) => {
+    if (value > 70) return "bg-green-500";
+    if (value > 30) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+
   return (
-    <div className="w-64 p-3 bg-white rounded-lg shadow">
-      <h3 className="text-lg font-semibold mb-2">Состояние персонажа</h3>
+    <div className="w-full md:w-80 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+      <h3 className="text-lg font-semibold mb-4 flex items-center">
+        <span className="text-xl mr-2">👤</span> Состояние персонажа
+      </h3>
       
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div>
           <div className="flex justify-between mb-1 text-sm">
-            <span>Голод</span>
-            <span>{stats.hunger}%</span>
+            <span className="flex items-center">
+              <span className="mr-1">🍔</span> Голод
+            </span>
+            <span className="font-medium">{stats.hunger}%</span>
           </div>
-          <Progress value={stats.hunger} className="h-2" />
+          <Progress value={stats.hunger} className="h-2.5 overflow-hidden rounded-full">
+            <div 
+              className={`h-full transition-all ${getProgressColor(stats.hunger)}`} 
+              style={{ width: `${stats.hunger}%` }}
+            />
+          </Progress>
         </div>
         
         <div>
           <div className="flex justify-between mb-1 text-sm">
-            <span>Чистота</span>
-            <span>{stats.cleanliness}%</span>
+            <span className="flex items-center">
+              <span className="mr-1">🧼</span> Чистота
+            </span>
+            <span className="font-medium">{stats.cleanliness}%</span>
           </div>
-          <Progress value={stats.cleanliness} className="h-2" />
+          <Progress value={stats.cleanliness} className="h-2.5 overflow-hidden rounded-full">
+            <div 
+              className={`h-full transition-all ${getProgressColor(stats.cleanliness)}`} 
+              style={{ width: `${stats.cleanliness}%` }}
+            />
+          </Progress>
         </div>
         
         <div>
           <div className="flex justify-between mb-1 text-sm">
-            <span>Энергия</span>
-            <span>{stats.energy}%</span>
+            <span className="flex items-center">
+              <span className="mr-1">⚡</span> Энергия
+            </span>
+            <span className="font-medium">{stats.energy}%</span>
           </div>
-          <Progress value={stats.energy} className="h-2" />
+          <Progress value={stats.energy} className="h-2.5 overflow-hidden rounded-full">
+            <div 
+              className={`h-full transition-all ${getProgressColor(stats.energy)}`} 
+              style={{ width: `${stats.energy}%` }}
+            />
+          </Progress>
         </div>
         
         <div>
           <div className="flex justify-between mb-1 text-sm">
-            <span>Настроение</span>
-            <span>{stats.mood}%</span>
+            <span className="flex items-center">
+              <span className="mr-1">😊</span> Настроение
+            </span>
+            <span className="font-medium">{stats.mood}%</span>
           </div>
-          <Progress value={stats.mood} className="h-2" />
+          <Progress value={stats.mood} className="h-2.5 overflow-hidden rounded-full">
+            <div 
+              className={`h-full transition-all ${getProgressColor(stats.mood)}`} 
+              style={{ width: `${stats.mood}%` }}
+            />
+          </Progress>
         </div>
       </div>
     </div>

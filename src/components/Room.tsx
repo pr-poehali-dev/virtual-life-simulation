@@ -1,6 +1,8 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Motion, AnimatePresence } from '@/components/ui/motion';
 
 type RoomProps = {
   type: 'bedroom' | 'kitchen' | 'bathroom' | 'livingroom';
@@ -13,36 +15,43 @@ const Room = ({ type, addToInventory, performAction }: RoomProps) => {
 
   const roomItems = {
     bedroom: [
-      { id: 'bed', name: 'Кровать', actions: ['sleep'] },
-      { id: 'wardrobe', name: 'Шкаф', items: ['одежда', 'книга', 'кошелек'] },
-      { id: 'shelf', name: 'Полка', items: ['фото', 'игрушка', 'ручка'] },
-      { id: 'table', name: 'Стол', items: ['ноутбук', 'тетрадь'] },
+      { id: 'bed', name: 'Кровать', actions: ['sleep'], icon: '🛏️' },
+      { id: 'wardrobe', name: 'Шкаф', items: ['одежда', 'книга', 'кошелек'], icon: '🪟' },
+      { id: 'shelf', name: 'Полка', items: ['фото', 'игрушка', 'ручка'], icon: '📚' },
+      { id: 'table', name: 'Стол', items: ['ноутбук', 'тетрадь'], icon: '🪑' },
     ],
     kitchen: [
-      { id: 'fridge', name: 'Холодильник', items: ['яблоко', 'сыр', 'молоко'] },
-      { id: 'stove', name: 'Плита', actions: ['cook'] },
-      { id: 'table', name: 'Кухонный стол', actions: ['eat'] },
-      { id: 'cupboard', name: 'Шкафчик', items: ['тарелка', 'чашка', 'нож'] },
+      { id: 'fridge', name: 'Холодильник', items: ['яблоко', 'сыр', 'молоко'], icon: '🧊' },
+      { id: 'stove', name: 'Плита', actions: ['cook'], icon: '🍳' },
+      { id: 'table', name: 'Кухонный стол', actions: ['eat'], icon: '🍽️' },
+      { id: 'cupboard', name: 'Шкафчик', items: ['тарелка', 'чашка', 'нож'], icon: '🪑' },
     ],
     bathroom: [
-      { id: 'sink', name: 'Раковина', actions: ['washHands'] },
-      { id: 'shower', name: 'Душ', actions: ['takeShower'] },
-      { id: 'cabinet', name: 'Шкафчик', items: ['зубная щетка', 'полотенце', 'мыло'] },
-      { id: 'toilet', name: 'Туалет', actions: ['useToilet'] },
+      { id: 'sink', name: 'Раковина', actions: ['washHands'], icon: '🚰' },
+      { id: 'shower', name: 'Душ', actions: ['takeShower'], icon: '🚿' },
+      { id: 'cabinet', name: 'Шкафчик', items: ['зубная щетка', 'полотенце', 'мыло'], icon: '🗄️' },
+      { id: 'toilet', name: 'Туалет', actions: ['useToilet'], icon: '🚽' },
     ],
     livingroom: [
-      { id: 'sofa', name: 'Диван', actions: ['rest'] },
-      { id: 'tv', name: 'Телевизор', actions: ['watchTV'] },
-      { id: 'bookshelf', name: 'Книжный шкаф', items: ['книга', 'журнал', 'фотоальбом'] },
-      { id: 'coffeeTable', name: 'Журнальный столик', items: ['пульт', 'ваза'] },
+      { id: 'sofa', name: 'Диван', actions: ['rest'], icon: '🛋️' },
+      { id: 'tv', name: 'Телевизор', actions: ['watchTV'], icon: '📺' },
+      { id: 'bookshelf', name: 'Книжный шкаф', items: ['книга', 'журнал', 'фотоальбом'], icon: '📚' },
+      { id: 'coffeeTable', name: 'Журнальный столик', items: ['пульт', 'ваза'], icon: '🪑' },
     ],
   };
 
-  const roomBackgrounds = {
-    bedroom: 'bg-blue-100',
-    kitchen: 'bg-yellow-100',
-    bathroom: 'bg-cyan-100',
-    livingroom: 'bg-green-100',
+  const roomClasses = {
+    bedroom: 'room-bedroom',
+    kitchen: 'room-kitchen',
+    bathroom: 'room-bathroom',
+    livingroom: 'room-livingroom',
+  };
+
+  const roomTitles = {
+    bedroom: 'Спальня',
+    kitchen: 'Кухня',
+    bathroom: 'Ванная',
+    livingroom: 'Гостиная',
   };
 
   const handleItemClick = (itemId: string) => {
@@ -74,59 +83,59 @@ const Room = ({ type, addToInventory, performAction }: RoomProps) => {
   };
 
   return (
-    <div className={`${roomBackgrounds[type]} p-6 rounded-lg h-full relative`}>
-      <h2 className="text-2xl font-bold mb-6">
-        {type === 'bedroom' && 'Спальня'}
-        {type === 'kitchen' && 'Кухня'}
-        {type === 'bathroom' && 'Ванная'}
-        {type === 'livingroom' && 'Гостиная'}
+    <div className={`${roomClasses[type]} p-6 rounded-xl h-full relative shadow-md`}>
+      <h2 className="text-2xl font-bold mb-6 flex items-center">
+        {roomTitles[type]}
       </h2>
       
-      <div className="flex flex-wrap -mx-2">
+      <div className="grid grid-cols-2 gap-4">
         {roomItems[type].map((item) => (
-          <div key={item.id} className="px-2 w-1/2 mb-4">
-            <div 
-              className="border border-gray-300 bg-white/80 rounded-lg p-4 h-full cursor-pointer hover:border-purple-400 transition-all"
-              onClick={() => handleItemClick(item.id)}
-            >
+          <Card 
+            key={item.id} 
+            className={`p-4 cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-primary ${showActionMenu === item.id ? 'border-primary ring-1 ring-primary' : ''}`}
+            onClick={() => handleItemClick(item.id)}
+          >
+            <div className="flex items-center gap-3">
+              <div className="text-2xl">{item.icon}</div>
               <div className="font-medium">{item.name}</div>
-              
-              {showActionMenu === item.id && (
-                <div className="mt-3 space-y-2 animate-fade-in">
-                  {item.items && item.items.map((subItem) => (
-                    <Button 
-                      key={subItem} 
-                      variant="outline" 
-                      size="sm" 
-                      className="w-full"
-                      onClick={() => handleTakeItem(subItem)}
-                    >
-                      Взять {subItem}
-                    </Button>
-                  ))}
-                  
-                  {item.actions && item.actions.map((action) => (
-                    <Button 
-                      key={action} 
-                      variant="outline" 
-                      size="sm" 
-                      className="w-full"
-                      onClick={() => handleAction(action)}
-                    >
-                      {getActionName(action)}
-                    </Button>
-                  ))}
-                </div>
-              )}
             </div>
-          </div>
+            
+            {showActionMenu === item.id && (
+              <div className="mt-3 space-y-2 animate-fade-in">
+                {item.items && item.items.map((subItem) => (
+                  <Button 
+                    key={subItem} 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full transition-all hover:bg-primary hover:text-white"
+                    onClick={() => handleTakeItem(subItem)}
+                  >
+                    Взять {subItem}
+                  </Button>
+                ))}
+                
+                {item.actions && item.actions.map((action) => (
+                  <Button 
+                    key={action} 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full transition-all hover:bg-primary hover:text-white"
+                    onClick={() => handleAction(action)}
+                  >
+                    {getActionName(action)}
+                  </Button>
+                ))}
+              </div>
+            )}
+          </Card>
         ))}
       </div>
       
-      <div className="absolute bottom-4 right-4">
-        <div className="w-12 h-24 bg-purple-600 rounded-full relative">
+      <div className="absolute bottom-6 right-6">
+        <div className="w-16 h-32 bg-primary rounded-full relative animate-float">
           {/* Простое изображение персонажа */}
-          <div className="w-8 h-8 bg-yellow-200 rounded-full absolute top-0 left-1/2 transform -translate-x-1/2"></div>
+          <div className="w-10 h-10 bg-yellow-200 rounded-full absolute top-0 left-1/2 transform -translate-x-1/2"></div>
+          <div className="absolute w-full text-center -bottom-6 font-medium text-primary-foreground">Вы</div>
         </div>
       </div>
     </div>

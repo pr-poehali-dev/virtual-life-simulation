@@ -3,6 +3,8 @@ import { useState } from 'react';
 import Room from './Room';
 import Character from './Character';
 import Inventory from './Inventory';
+import { Button } from '@/components/ui/button'; 
+import { Card } from '@/components/ui/card';
 
 type RoomType = 'bedroom' | 'kitchen' | 'bathroom' | 'livingroom';
 
@@ -72,48 +74,53 @@ const GameScreen = () => {
     }
   };
 
+  const roomIcons = {
+    bedroom: '🛏️',
+    kitchen: '🍳',
+    bathroom: '🚿',
+    livingroom: '📺'
+  };
+
   return (
-    <div className="w-full h-screen max-w-6xl flex flex-col">
-      <div className="flex justify-between p-4 bg-purple-100 rounded-lg mb-4">
-        <Character stats={characterState} />
-        <div className="flex gap-4">
-          <button 
-            className={`px-4 py-2 rounded-md ${currentRoom === 'bedroom' ? 'bg-purple-600 text-white' : 'bg-purple-200'}`}
-            onClick={() => changeRoom('bedroom')}
-          >
-            Спальня
-          </button>
-          <button 
-            className={`px-4 py-2 rounded-md ${currentRoom === 'kitchen' ? 'bg-purple-600 text-white' : 'bg-purple-200'}`}
-            onClick={() => changeRoom('kitchen')}
-          >
-            Кухня
-          </button>
-          <button 
-            className={`px-4 py-2 rounded-md ${currentRoom === 'bathroom' ? 'bg-purple-600 text-white' : 'bg-purple-200'}`}
-            onClick={() => changeRoom('bathroom')}
-          >
-            Ванная
-          </button>
-          <button 
-            className={`px-4 py-2 rounded-md ${currentRoom === 'livingroom' ? 'bg-purple-600 text-white' : 'bg-purple-200'}`}
-            onClick={() => changeRoom('livingroom')}
-          >
-            Гостиная
-          </button>
+    <div className="w-full min-h-screen max-w-6xl mx-auto p-4 flex flex-col">
+      <Card className="p-4 mb-6 shadow-md">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <Character stats={characterState} />
+          
+          <div className="flex flex-wrap gap-2">
+            {Object.entries(roomIcons).map(([room, icon]) => (
+              <Button 
+                key={room}
+                size="lg"
+                variant={currentRoom === room ? "default" : "outline"}
+                className={`px-4 py-2 transition-all ${currentRoom === room ? 'animate-pulse-soft' : ''}`}
+                onClick={() => changeRoom(room as RoomType)}
+              >
+                <span className="mr-2">{icon}</span>
+                {room === 'bedroom' && 'Спальня'}
+                {room === 'kitchen' && 'Кухня'}
+                {room === 'bathroom' && 'Ванная'}
+                {room === 'livingroom' && 'Гостиная'}
+              </Button>
+            ))}
+          </div>
         </div>
-      </div>
+      </Card>
       
-      <div className="flex-1 flex">
+      <div className="flex-1 flex flex-col lg:flex-row gap-6">
         <div className="flex-1">
-          <Room 
-            type={currentRoom} 
-            addToInventory={addToInventory} 
-            performAction={performAction}
-          />
+          <Card className="h-full shadow-md overflow-hidden">
+            <Room 
+              type={currentRoom} 
+              addToInventory={addToInventory} 
+              performAction={performAction}
+            />
+          </Card>
         </div>
-        <div className="w-64 bg-purple-50 p-4 rounded-lg">
-          <Inventory items={inventory} removeFromInventory={removeFromInventory} />
+        <div className="w-full lg:w-80">
+          <Card className="shadow-md h-full">
+            <Inventory items={inventory} removeFromInventory={removeFromInventory} />
+          </Card>
         </div>
       </div>
     </div>
